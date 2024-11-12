@@ -1,0 +1,93 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Mango.Web</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/Mango.Web.styles.css" asp-append-version="true" />
+    <link href='https://fonts.googleapis.com/css?family=Borel' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" >
+            <div class="me-4" style="display: inline-block; padding: 5px; border: 2px solid red; background-color: #f0f0f0;">
+                <a asp-controller="Home" asp-action="Index">
+                    <span style="color: red; font-weight: bold; font-size: 15px; border: 10px">MANGO</span>
+                </a>            
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item me-3">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>             
+                    <li class="nav-item me-3">
+                        <a class="nav-link">About us</a>
+                    </li>
+                    <li class="nav-item dropdown me-4">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Manage Items
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" asp-controller="Coupon" asp-action="CouponIndex">Coupon</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" asp-controller="Product" asp-action="ProductIndex">Product</a></li>
+                        </ul>
+                    </li>                    
+                </ul>
+
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item me-3">
+                        <a class="nav-link" asp-controller="Cart" asp-action="CartIndex">
+                            <i class="bi bi-cart"></i>
+                        </a>
+                    </li>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="btn btn-outline-primary me-2" asp-controller="Auth" asp-action="Login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-primary" asp-controller="Auth" asp-action="Register">Register</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="btn btn-outline me-2" style="padding-top: 15px" href="#">
+                                <span style="font-family: 'Borel'">Hello!</span>
+                                <span>@User.Identity.Name</span>
+                            </a>
+                            <a class="btn btn-outline-primary me-4" asp-controller="Auth" asp-action="Logout">Logout</a>                          
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+
+    </header>
+    <div class="container">
+        <partial name="_Notifications" />
+        <main role="main" class="pb-3">
+            @RenderBody()                     
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container text-center">
+            &copy; 2024 - Mango.Web : Made with <i class="bi bi-heart-fill flag flag-india">in India</i>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
