@@ -1,4 +1,5 @@
 ﻿using Mango.Services.EmailAPI.Data;
+using Mango.Services.EmailAPI.Message;
 using Mango.Services.EmailAPI.Models;
 using Mango.Services.EmailAPI.Models.Dto;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,12 @@ namespace Mango.Services.EmailAPI.Service
             message.Append("</ul>");
 
             await LogAndEmail(message.ToString(), cart.CartHeader.Email);
+        }
+
+        public async Task EmailAndLogConfirmedOrder(OrderConfirmationMessage message)
+        {
+            string messageLog = $"Order confirmed with OrderId: {message.OrderId} for UserId: {message.UserId}";
+            await LogAndEmail(messageLog, "admin_support@mangocart.com");
         }
 
         public async Task EmailAndLogRegisterUser(string message)
