@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Mango.Messaging;
 using Mango.Services.OrderAPI.Data;
 using Mango.Services.OrderAPI.Models;
 using Mango.Services.OrderAPI.Models.Dto;
@@ -21,14 +22,18 @@ namespace Mango.Services.OrderAPI.Controllers
         private readonly IProductService _productService;
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
+        private readonly IMessageBus _messageBus;
+        private readonly IConfiguration _configuration;
 
 
-        public OrderAPIController(IProductService productService, AppDbContext db, IMapper mapper )
+        public OrderAPIController(IProductService productService, AppDbContext db, IMapper mapper, IMessageBus messageBus, IConfiguration configuration )
         {
             this._response = new();
             _productService = productService;
             _db = db;
             _mapper = mapper;
+            _messageBus = messageBus;
+            _configuration = configuration;
         }
 
         [Authorize]
@@ -71,8 +76,7 @@ namespace Mango.Services.OrderAPI.Controllers
                     SuccessUrl = stripeRequestDto.ApprovedUrl,
                     CancelUrl = stripeRequestDto.CancelUrl,
                     LineItems = new List<SessionLineItemOptions>(),
-                    Mode = "payment",
-                    Discounts = new List<SessionDiscountOptions>()
+                    Mode = "payment",                   
                 };
 
 
@@ -94,15 +98,16 @@ namespace Mango.Services.OrderAPI.Controllers
                     options.LineItems.Add(sessionLineItem);
                 }
 
-                List<SessionDiscountOptions> discountObj = new()
-                {
-                    new()
-                    {
-                        Coupon = stripeRequestDto.OrderHeader.CouponCode
-                    }
-                };
+              
                 if (stripeRequestDto.OrderHeader.Discount > 0) 
-                { 
+                {
+                    List<SessionDiscountOptions> discountObj = new()
+                        {
+                            new()
+                            {
+                                Coupon = stripeRequestDto.OrderHeader.CouponCode
+                            }
+                        };
                     options.Discounts = discountObj;
                 }
                 
@@ -149,8 +154,17 @@ namespace Mango.Services.OrderAPI.Controllers
                     orderHeader.PaymentIntentId = paymentIntent.Id;
                     orderHeader.Status = SD.Status_Approved;
                     await _db.SaveChangesAsync();
+                    // post order details to servicebus topic
+                    RewardsDto rewardsDto = new()
+                    {
+                        UserId = orderHeader.UserId,
+                        OrderId = orderHeader.OrderHeaderId,
+                        RewardsActivity = Convert.ToInt32(orderHeader.OrderTotal)
+                    };
+                    await _messageBus.PublishMessage(rewardsDto, _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic"));
+                    _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
                 }               
-               _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
+               
             }
             catch (Exception ex)
             {
