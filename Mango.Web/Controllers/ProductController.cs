@@ -39,17 +39,19 @@ namespace Mango.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> ProductCreate(ProductDto productDto)
 		{
-			ResponseDto? result = await _productService.CreateProductAsync(productDto);
-
-			if (result != null && result.IsSuccess)
+			if(ModelState.IsValid)
 			{
-				TempData["success"] = "Product created!";
-				return RedirectToAction(nameof(ProductIndex));
-			}
-			else
-			{
-				TempData["error"] = result?.Message;
-			}
+                ResponseDto? result = await _productService.CreateProductAsync(productDto);
+                if (result != null && result.IsSuccess)
+                {
+                    TempData["success"] = "Product created!";
+                    return RedirectToAction(nameof(ProductIndex));
+                }
+                else
+                {
+                    TempData["error"] = result?.Message;
+                }
+            }
 			return View();
 		}
 		public async Task<IActionResult> ProductEdit(int productId)
@@ -72,16 +74,18 @@ namespace Mango.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> ProductEdit(ProductDto productDto)
 		{
-			ResponseDto? result = await _productService.UpdateProductAsync(productDto);
-
-			if (result != null && result.IsSuccess)
+			if (ModelState.IsValid)
 			{
-				TempData["success"] = "Product Edited successfully";
-				return RedirectToAction(nameof(ProductIndex));
-			}
-			else
-			{
-				TempData["error"] = result?.Message;
+				ResponseDto? result = await _productService.UpdateProductAsync(productDto);
+				if (result != null && result.IsSuccess)
+				{
+					TempData["success"] = "Product Edited successfully";
+					return RedirectToAction(nameof(ProductIndex));
+				}
+				else
+				{
+					TempData["error"] = result?.Message;
+				}
 			}
 			return View(productDto);
 		}
