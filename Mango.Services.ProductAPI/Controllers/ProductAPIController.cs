@@ -57,14 +57,35 @@ namespace Mango.Services.ProductAPI.Controllers
 		
         [HttpPost]
 		[Authorize(Roles = "ADMIN")]
-		public ResponseDto Post([FromBody] ProductDto dtoModel)
+		public ResponseDto Post(ProductDto productDto)
 		{
 			try
 			{
-                 var obj= _mapper.Map<Product>(dtoModel);
-                _db.Products.Add(obj);
+                 var product= _mapper.Map<Product>(productDto);
+                _db.Products.Add(product);
                 _db.SaveChanges();
-				_response.Result = _mapper.Map<ProductDto>(obj);			              
+
+				//if Image i.e.,FormFile type present in productDto
+				if(productDto.Image !=null)
+				{
+					string fileName = product.Id + Path.GetExtension(productDto.Image.FileName);
+					string filePath = @"wwwroot\ProductImages\"+ fileName;
+					var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(),filePath);
+					using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
+					{
+						productDto.Image.CopyTo(fileStream);
+					} 
+					// copy product image to rootfolder of API server
+					var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
+					product.ImageUrl = baseUrl + "/ProductImages/"+ fileName;
+					product.ImageLocalPath = filePath;
+				}
+				else{
+					product.ImageUrl = "https://placehold.co/600x400";
+                }
+				_db.Products.Update(product);
+				_db.SaveChanges();
+				_response.Result = _mapper.Map<ProductDto>(product);			              
 			}
 			catch (Exception ex)
 			{
@@ -77,14 +98,40 @@ namespace Mango.Services.ProductAPI.Controllers
 
 		[HttpPut]
 		[Authorize(Roles = "ADMIN")]
-		public ResponseDto Put([FromBody] ProductDto dtoModel)
+		public ResponseDto Put(ProductDto productDto)
 		{
 			try
 			{
-				var obj = _mapper.Map<Product>(dtoModel);
-				_db.Products.Update(obj);
+				var product = _mapper.Map<Product>(productDto);
+				// if product image is present - delete existing image ffrom wwwroot of API and store new img
+				// [1] Delete existing image
+				if (productDto.Image != null)
+				{
+                    if (!string.IsNullOrEmpty(product.ImageLocalPath))
+                    { // Image of the prod to be deleted - remove from wwroot
+                        var pathToDelete = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPath);
+                        var file = new FileInfo(pathToDelete);
+                        if (file.Exists)
+                        {
+                            file.Delete();
+                        }
+                    }
+                    // [2] Add new image
+					string fileName = product.Id + Path.GetExtension(productDto.Image.FileName);
+					string filePath = @"wwwroot\ProductImages\" + fileName;
+					var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+					using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
+					{
+						productDto.Image.CopyTo(fileStream);
+					}
+					// copy product image to rootfolder of API server
+					var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
+					product.ImageUrl = baseUrl + "/ProductImages/" + fileName;
+					product.ImageLocalPath = filePath;
+				}
+                _db.Products.Update(product);
 				_db.SaveChanges();
-				_response.Result = _mapper.Map<ProductDto>(obj);
+				_response.Result = _mapper.Map<ProductDto>(product);
 			}
 			catch (Exception ex)
 			{
@@ -102,6 +149,15 @@ namespace Mango.Services.ProductAPI.Controllers
 			try
 			{
 				Product product = _db.Products.First(res => res.Id == id);
+				if (!string.IsNullOrEmpty(product.ImageLocalPath))
+				{ // Image of the prod to be deleted - remove from wwroot
+					var pathToDelete = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPath);
+					var file = new FileInfo(pathToDelete);
+					if (file.Exists)
+					{
+						file.Delete();
+					}
+				}
 				_db.Products.Remove(product);
 				_db.SaveChanges();
 				_response.Result = _mapper.Map<ProductDto>(product); // To mention prod which deleted

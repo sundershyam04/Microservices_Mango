@@ -10,7 +10,6 @@ namespace Mango.Web.Service
 {
     public class BaseService : IBaseService
     {
-
         //To create httpclient instance
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ITokenProvider  _tokenProvider;
@@ -27,26 +26,56 @@ namespace Mango.Web.Service
                 HttpResponseMessage apiResponse = null;
                 HttpRequestMessage message = new();
                 //: Populating message on request
-                message.Headers.Add("Accept", "application/json");
+                if (requestDto.ContentType == ContentType.MultipartFormData) //for image type file for Product Image
+                {
+                    message.Headers.Add("Accept", "*/*");
+                }
+                else
+                {
+                    message.Headers.Add("Accept", "application/json");
+                }
+
                 //message.Headers.Add("Content-Type", "application/json");
                 // token code
                 message.RequestUri = new Uri(requestDto.Url);
 
-                if (requestDto.Data != null)
+                // set content in http msg for img data
+                if (requestDto.ContentType == ContentType.MultipartFormData)
                 {
-                    // Info: Provides HTTP content based on a string.
-                    // Object --> HttpContent (abstract) -->ByteArrayContent --> StringContent
-                    // Json --> String (SERIALIZE)
-                    message.Content = new StringContent(JsonConvert.SerializeObject(requestDto.Data), Encoding.UTF8, "application/json");
+                    var content = new MultipartFormDataContent();
+                    foreach (var property in requestDto.Data.GetType().GetProperties())
+                    {
+                        var value = property.GetValue(requestDto.Data);
+                        if(value is FormFile)
+                        {
+                            var file = (FormFile)value;
+                            if (file != null){
+                                content.Add(new StreamContent(file.OpenReadStream()), property.Name, file.FileName);
+                            }
+                        }
+                        else
+                        {
+                            content.Add(new StringContent(value == null? "":value.ToString()),property.Name);
+                        }
+                    }
+                    message.Content = content;
                 }
-
+                else
+                {
+                    if (requestDto.Data != null)
+                    {
+                        // Info: Provides HTTP content based on a string.
+                        // Object --> HttpContent (abstract) -->ByteArrayContent --> StringContent
+                        // Json --> String (SERIALIZE)
+                        message.Content = new StringContent(JsonConvert.SerializeObject(requestDto.Data), Encoding.UTF8, "application/json");
+                    }
+                }
                 if (withBearer)
                 {
                     var token = _tokenProvider.GetToken();
                     message.Headers.Add("Authorization", $"Bearer {token}");
                 }
                 //set apitype in message(httpreqmsg)
-
                 switch (requestDto.ApiType)
                 {
                     case ApiType.DELETE:
