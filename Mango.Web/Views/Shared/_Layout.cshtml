@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Mango.Web.Utility
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +14,22 @@
     <link rel="stylesheet" href="~/Mango.Web.styles.css" asp-append-version="true" />
     <link href='https://fonts.googleapis.com/css?family=Borel' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        .admin-badge {
+            display: inline-block;
+            background-color: #ff5722; /* Bright orange for contrast */
+            color: #fff; /* White text for readability */
+            padding: 5px 10px; /* Space inside the box */
+            border-radius: 20px; /* Rounded corners */
+            font-size: 14px; /* Adjust font size */
+            font-weight: bold; /* Make text bold */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+            border: 1px solid #e64a19; /* Slightly darker border */
+            text-transform: uppercase; /* Makes text uppercase */
+            cursor: default; /* Indicates it's not clickable */
+            margin-left: 10px; /* Space between other nav items */
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -29,19 +47,19 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                     </li>             
-                    <li class="nav-item">
-                        <a class="nav-link">About us</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Manage Items
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" asp-controller="Coupon" asp-action="CouponIndex">Coupon</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" asp-controller="Product" asp-action="ProductIndex">Product</a></li>
-                        </ul>
-                    </li> 
+                   @if(User.IsInRole(SD.RoleAdmin))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Content Management
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" asp-controller="Coupon" asp-action="CouponIndex">Coupon</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-controller="Product" asp-action="ProductIndex">Product</a></li>
+                            </ul>
+                        </li>
+                    }
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Order" asp-action="OrderIndex">
                             Manage Order
@@ -50,6 +68,12 @@
                 </ul>
 
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    @if (User.IsInRole(SD.RoleAdmin))
+                    {
+                        <li class="nav-item me-3 pt-3">
+                            <span class="admin-badge">Admin</span>
+                        </li>
+                    }
                     <li class="nav-item me-3">
                         <a class="nav-link" asp-controller="Cart" asp-action="CartIndex">
                             <i class="bi bi-cart"></i>
@@ -77,7 +101,6 @@
                 </ul>
             </div>
         </nav>
-
     </header>
     <div class="container">
         <partial name="_Notifications" />
@@ -88,7 +111,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container text-center">
-            &copy; 2024 - Mango.Web : Made with <i class="bi bi-heart-fill flag flag-india">in India</i>
+            &copy; 2024 - Mango.Web : Made with <i class="bi bi-heart-fill flag flag-india"> in India</i>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

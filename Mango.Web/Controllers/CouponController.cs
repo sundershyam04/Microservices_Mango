@@ -67,8 +67,8 @@ namespace Mango.Web.Controllers
                 TempData["error"] = result?.Message;
             }
             return NotFound();
-            
         }
+
         [HttpPost]
         public async Task<IActionResult> CouponDelete(CouponDto couponDto)
         {
