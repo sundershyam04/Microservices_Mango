@@ -32,7 +32,7 @@ namespace Mango.Services.RewardAPI.Service
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"error on uoppdating rewaards in db: {ex.Message}");
+                Console.WriteLine($"error on uppdating rewaards in db: {ex.Message}");
             }
         }
       
