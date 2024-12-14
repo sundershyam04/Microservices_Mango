@@ -2,8 +2,11 @@
 @model ProductDto
 
 <form method="post">
-    <input asp-for="Id" hidden />
-    <div class=" pt-4">
+    
+    @if(Model!=null)
+    {
+            <input asp-for="Id" hidden />
+        <div class=" pt-4">
         <div class="card container" style="border:1px solid #808080;">
             <div class="card-header bg-dark text-light row" style="border-radius: 0px;">
                 <div class="col-12 col-md-6">
@@ -44,6 +47,7 @@
             </div>
         </div>
     </div>
+    }
 </form>
 
 @section Scripts{

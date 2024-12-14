@@ -1,0 +1,250 @@
+{
+  //  "CouponAPI": "https://mangoservicescouponapi-prod-gbe7f7cnfeebf8ex.australiacentral-01.azurewebsites.net",
+  //  "ProductAPI": "https://mangoservicesproductapi-cfg2ctgzdgcsc2hs.australiaeast-01.azurewebsites.net",
+  //  "ShoppingCartAPI": "https://mangoservicescartapi-prod-ceehakb6g6g4bmb9.australiacentral-01.azurewebsites.net",
+  //  "OrderAPI": "https://mangoservicesorderapi-prod-g2gvd7b2d0h5bsfz.australiacentral-01.azurewebsites.net"
+  "Routes": [
+    // PRODUCT API : mangoservicesproductapi-cfg2ctgzdgcsc2hs.australiaeast-01.azurewebsites.net
+    {
+      "DownstreamPathTemplate": "/api/product",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicesproductapi-cfg2ctgzdgcsc2hs.australiaeast-01.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/product",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/product/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicesproductapi-cfg2ctgzdgcsc2hs.australiaeast-01.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/api/product/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/product",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicesproductapi-cfg2ctgzdgcsc2hs.australiaeast-01.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/api/product",
+      "UpstreamHttpMethod": [ "POST", "PUT" ]
+    },
+
+    // COUPON API: mangoservicescouponapi-prod-gbe7f7cnfeebf8ex.australiacentral-01.azurewebsites.net
+    {
+      "DownstreamPathTemplate": "/api/coupon",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicescouponapi-prod-gbe7f7cnfeebf8ex.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/api/coupon",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/coupon",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicescouponapi-prod-gbe7f7cnfeebf8ex.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/api/coupon",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/coupon/GetByCode/{code}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicescouponapi-prod-gbe7f7cnfeebf8ex.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/api/coupon/GetByCode/{code}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/coupon/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicescouponapi-prod-gbe7f7cnfeebf8ex.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/api/coupon/{id}",
+      "UpstreamHttpMethod": [ "DELETE", "GET" ]
+    },
+    // SHOPPINGCART API:mangoservicescartapi-prod-ceehakb6g6g4bmb9.australiacentral-01.azurewebsites.net
+    {
+      "DownstreamPathTemplate": "/api/cart/GetCart/{userId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicescartapi-prod-ceehakb6g6g4bmb9.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cart/GetCart/{userId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/cart/CartUpsert",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicescartapi-prod-ceehakb6g6g4bmb9.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cart/CartUpsert",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/cart/RemoveCart/{cartDetailId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicescartapi-prod-ceehakb6g6g4bmb9.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cart/RemoveCart/{cartDetailId}",
+      "UpstreamHttpMethod": [ "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/cart/EmailCartRequest",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicescartapi-prod-ceehakb6g6g4bmb9.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cart/EmailCartRequest",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/cart/ApplyCoupon",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicescartapi-prod-ceehakb6g6g4bmb9.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/api/cart/ApplyCoupon",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    // ORDER API: mangoservicesorderapi-prod-g2gvd7b2d0h5bsfz.australiacentral-01.azurewebsites.net
+    {
+      "DownstreamPathTemplate": "/api/order/CreateOrder",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicesorderapi-prod-g2gvd7b2d0h5bsfz.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/api/order/CreateOrder",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/order/CreateStripeSession",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicesorderapi-prod-g2gvd7b2d0h5bsfz.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/api/order/CreateStripeSession",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/order/ValidateStripeSession",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicesorderapi-prod-g2gvd7b2d0h5bsfz.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/api/order/ValidateStripeSession",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/order/UpdateOrderStatus/{orderId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicesorderapi-prod-g2gvd7b2d0h5bsfz.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/api/order/UpdateOrderStatus/{orderId}",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/order/GetOrder/{orderId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicesorderapi-prod-g2gvd7b2d0h5bsfz.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/api/order/GetOrder/{orderId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/order/GetOrders",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mangoservicesorderapi-prod-g2gvd7b2d0h5bsfz.australiacentral-01.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/api/order/GetOrders",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://mangogateway-prod.azurewebsites.net"
+  }
+}

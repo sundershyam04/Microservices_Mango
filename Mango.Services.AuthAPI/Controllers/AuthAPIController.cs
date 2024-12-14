@@ -33,7 +33,7 @@ namespace Mango.Fro.AuthAPI.Controllers
                 _response.Message = errorMessage;
                 return BadRequest(_response);
             }
-            _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:EmailRegisterUserQueue"));
+           _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:EmailRegisterUserQueue"));
             return Ok(_response);
         }
 
