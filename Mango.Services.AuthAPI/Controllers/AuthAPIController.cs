@@ -1,6 +1,7 @@
 ﻿using Mango.Fro.AuthAPI.Models;
 using Mango.Fro.AuthAPI.Service.IService;
 using Mango.Messaging;
+using Mango.Services.AuthAPI.RabbitMQSender;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,9 +14,9 @@ namespace Mango.Fro.AuthAPI.Controllers
         private readonly IAuthService _authService;
 
         private readonly ResponseDto _response;
-        private readonly IMessageBus _messageBus;
+        private readonly IRabbitMQAuthMessageSender _messageBus;
         private readonly IConfiguration _configuration;
-        public AuthAPIController(IAuthService authService, IMessageBus messageBus, IConfiguration configuration)
+        public AuthAPIController(IAuthService authService, IRabbitMQAuthMessageSender messageBus, IConfiguration configuration)
         {
             _authService = authService;
             _response = new();
@@ -33,7 +34,7 @@ namespace Mango.Fro.AuthAPI.Controllers
                 _response.Message = errorMessage;
                 return BadRequest(_response);
             }
-           _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:EmailRegisterUserQueue"));
+           await _messageBus.SendMessageAsync(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:EmailRegisterUserQueue"));
             return Ok(_response);
         }
 

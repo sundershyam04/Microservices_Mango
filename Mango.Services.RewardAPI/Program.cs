@@ -14,6 +14,7 @@ var optionbuilder = new DbContextOptionsBuilder<AppDbContext>();
 optionbuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddSingleton<IRewardService>(new RewardService(optionbuilder.Options));
 builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
+builder.Services.AddHostedService<RabbitMQOrderConsumer>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

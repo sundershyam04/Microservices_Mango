@@ -3,6 +3,7 @@ using Mango.Fro.AuthAPI.Models;
 using Mango.Fro.AuthAPI.Service;
 using Mango.Fro.AuthAPI.Service.IService;
 using Mango.Messaging;
+using Mango.Services.AuthAPI.RabbitMQSender;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,7 +27,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();  
-builder.Services.AddScoped<IMessageBus, MessageBus>();  
+builder.Services.AddScoped<IRabbitMQAuthMessageSender, RabbitMQAuthMessageSender>();  
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

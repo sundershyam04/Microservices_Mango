@@ -3,6 +3,7 @@ using Mango.Messaging;
 using Mango.Services.OrderAPI.Data;
 using Mango.Services.OrderAPI.Models;
 using Mango.Services.OrderAPI.Models.Dto;
+using Mango.Services.OrderAPI.RabbitMQSender;
 using Mango.Services.OrderAPI.Service.IService;
 using Mango.Services.OrderAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -23,11 +24,11 @@ namespace Mango.Services.OrderAPI.Controllers
         private readonly IProductService _productService;
         private readonly AppDbContext _db;
         private readonly IMapper _mapper;
-        private readonly IMessageBus _messageBus;
+        private readonly IRabbitMQOrderMessageSender _messageBus;
         private readonly IConfiguration _configuration;
 
 
-        public OrderAPIController(IProductService productService, AppDbContext db, IMapper mapper, IMessageBus messageBus, IConfiguration configuration )
+        public OrderAPIController(IProductService productService, AppDbContext db, IMapper mapper, IRabbitMQOrderMessageSender messageBus, IConfiguration configuration )
         {
             this._response = new();
             _productService = productService;
@@ -237,7 +238,7 @@ namespace Mango.Services.OrderAPI.Controllers
                         OrderId = orderHeader.OrderHeaderId,
                         RewardsActivity = Convert.ToInt32(orderHeader.OrderTotal)
                     };
-                    await _messageBus.PublishMessage(rewardsDto, _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic"));
+                    await _messageBus.SendMessageAsync(rewardsDto, _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic"));
                     _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
                 }               
                
